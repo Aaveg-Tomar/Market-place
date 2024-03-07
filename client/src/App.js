@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer , useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Service from "./Services/Services";
 import LoginUser from "./LoginUser/Signin";
@@ -138,6 +138,10 @@ const reducer = (state, action) => {
   }
 };
 
+export const ItemContext = createContext();
+
+
+
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigate = useNavigate();
@@ -149,9 +153,12 @@ const App = () => {
     }
   },[])
 
+  const [selectedItem, setSelectedItems] = useState([]);
+
   return (
     <>
       <userContext.Provider value={{ state, dispatch }}>
+      <ItemContext.Provider value={[selectedItem , setSelectedItems]}>
         <Nav />
         <Socket />
         <Routes>
@@ -173,11 +180,15 @@ const App = () => {
           <Route path="/message" Component={Message} />
           <Route path="/edituser" Component={EditUser} />
           <Route path="*" Component={LoginPro} />
-          <Route path="/cart" Component={Cart}/>
-          <Route path="/items" Component={Item}/>
+         
+            <Route path="/items" Component={Item}/>
+            <Route path="/cart" Component={Cart}/>
+        
           <Route path="/additems" Component={AddItems}/>
         </Routes>
         <Footer id="footer" />
+        </ItemContext.Provider>
+
       </userContext.Provider>
     </>
   );
